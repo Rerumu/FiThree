@@ -958,3 +958,5 @@ do
 		return luaF_wrap(luaU_undump(bytecode), env);
 	end
 end
+
+return { luaF_newLclosure = luaF_newLclosure, luaF_dispatch = luaF_dispatch, luaU_undump = luaU_undump, luaF_wrap = luaF_wrap }
