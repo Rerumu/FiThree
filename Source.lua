@@ -750,7 +750,7 @@ do
 				end
 				if (c ~= 1) then
 					if (c == 0) then
-						top = nr + a;
+						top = nr + a - 1;
 					else
 						nr = c - 1;
 					end
@@ -792,6 +792,7 @@ do
 					for i = a, nr do
 						rets[i - a + 1] = stack[i];
 					end
+					nr = nr - a + 1;
 				end
 				return nr, rets;
 			elseif (op == 39) then -- FORLOOP
@@ -959,4 +960,9 @@ do
 	end
 end
 
-return { luaF_newLclosure = luaF_newLclosure, luaF_dispatch = luaF_dispatch, luaU_undump = luaU_undump, luaF_wrap = luaF_wrap }
+return {
+	luaF_newLclosure = luaF_newLclosure,
+	luaF_dispatch = luaF_dispatch,
+	luaU_undump = luaU_undump,
+	luaF_wrap = luaF_wrap
+};
