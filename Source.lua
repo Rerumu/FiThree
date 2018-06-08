@@ -292,8 +292,8 @@ do
 				-- thanks @Eternal for giving me this so I could mangle it in here and have it work
 				local left = readint();
 				local right = readint();
-				local mantissa = (band(right, 0x7FFFF) * (2 ^ 32))
-				+ left;
+				local mantissa = (band(right, 0xFFFFF) * (2 ^ 32))
+								+ left;
 				local exponent = band(rsh(right, 20), 0x7FF);
 				local sign = ((-1) ^ band(rsh(right, 31), 0x1));
 				local normal = 1;
