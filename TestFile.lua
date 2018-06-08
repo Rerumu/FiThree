@@ -1,10 +1,20 @@
--- Lua 5.3 Test File
+local f = {};
+local m = 5;
 
-local function closure(a, b, c)
-	print(a ~ b ~ c)
-	return a 
+while true do
+	for x, y in ipairs{1, 2, 3, 4, 0} do
+		if (x > y) then
+			goto out;
+		else
+			table.insert(f, function()
+				m = m + 1;
+			end);
+		end
+	end
 end
 
-print(closure(1, 2, 3))
-
-print"???"
+::out::
+for i = 1, #f do
+	f[i]();
+end
+print(m)

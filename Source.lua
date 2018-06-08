@@ -888,6 +888,8 @@ do
 									stk = stack;
 									idx = m.idx;
 								};
+								nopen = nopen + 1;
+								openupval[nopen] = n;
 							end
 						else
 							n = upvals[m.idx];
