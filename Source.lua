@@ -410,7 +410,8 @@ do
 					pc = pc + 1;
 				end
 			elseif (op == 4) then -- LOADNIL
-				for i = dpc.A, dpc.B do
+				local a = dpc.A;
+				for i = a, a + dpc.B do
 					setobj(i, nil);
 				end
 			elseif (op == 5) then -- GETUPVAL
