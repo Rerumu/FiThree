@@ -596,6 +596,8 @@ do
 				else
 					c = stack[c];
 				end
+				b = b - b % 1;
+				c = c - c % 1;
 				setobj(dpc.A, band(b, c));
 			elseif (op == 21) then -- BOR
 				local b = dpc.B;
@@ -610,6 +612,8 @@ do
 				else
 					c = stack[c];
 				end
+				b = b - b % 1;
+				c = c - c % 1;
 				setobj(dpc.A, bor(b, c));
 			elseif (op == 22) then -- BXOR
 				local b = dpc.B;
@@ -624,10 +628,13 @@ do
 				else
 					c = stack[c];
 				end
+				b = b - b % 1;
+				c = c - c % 1;
 				setobj(dpc.A, bxor(b, c));
 			elseif (op == 23) then -- SHIFTL
 				local b = dpc.B;
 				local c = dpc.C;
+				local shift;
 				if (b >= 0x100) then
 					b = k[b - 0x100];
 				else
@@ -638,10 +645,19 @@ do
 				else
 					c = stack[c];
 				end
-				setobj(dpc.A, shl(b, c));
+				b = b - b % 1;
+				c = c - c % 1;
+				if (c < 0) then
+					shift = shr;
+					c = -c;
+				else
+					shift = shl;
+				end
+				setobj(dpc.A, shift(b, c));
 			elseif (op == 24) then -- SHIFTR
 				local b = dpc.B;
 				local c = dpc.C;
+				local shift;
 				if (b >= 0x100) then
 					b = k[b - 0x100];
 				else
@@ -652,11 +668,20 @@ do
 				else
 					c = stack[c];
 				end
-				setobj(dpc.A, shr(b, c));
+				b = b - b % 1;
+				c = c - c % 1;
+				if (c < 0) then
+					shift = shl;
+					c = -c;
+				else
+					shift = shr;
+				end
+				setobj(dpc.A, shift(b, c));
 			elseif (op == 25) then -- UMN
 				setobj(dpc.A, -stack[dpc.B]);
 			elseif (op == 26) then -- BNOT
-				setobj(dpc.A, bnot(stack[dpc.B]));
+				local b = stack[dpc.B];
+				setobj(dpc.A, bnot(b - b % 1));
 			elseif (op == 27) then -- NOT
 				setobj(dpc.A, not stack[dpc.B]);
 			elseif (op == 28) then -- LEN
