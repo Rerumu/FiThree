@@ -345,8 +345,10 @@ do
 end
 
 do
+	local assert = assert;
 	local select = select;
 	local unpack = unpack or table.unpack;
+	local tonumber = tonumber;
 	local function h_wrap(...)
 		return select('#', ...), {...};
 	end
