@@ -351,7 +351,9 @@ do
 		return select('#', ...), {...};
 	end
 
-	local function luaV_execute(cl, stack, vararg)
+	local function luaV_execute(frame)
+		local cl = frame.lclosure;
+		local stack = frame.stack;
 		local upvals = cl.upvals;
 		local code = cl.p.code;
 		local k = cl.p.k;
@@ -391,9 +393,10 @@ do
 		local shl = bit.lshift;
 		local shr = bit.rshift;
 
-		while code[pc] do
+		while true do
 			local dpc = code[pc];
 			local op = dpc.i;
+			frame.lastpc = pc; -- for debugging
 			pc = pc + 1;
 
 			if (op == 0) then -- MOVE
@@ -838,7 +841,7 @@ do
 				local t = stack[a];
 				local off;
 				if (b == 0) then
-					b = top - a - 1;
+					b = top - a;
 				end
 				if (c == 0) then
 					c = code[pc].Ax;
@@ -901,6 +904,7 @@ do
 				p.cached = ncl;
 				setobj(dpc.A, luaF_wrap(ncl));
 			elseif (op == 45) then -- VARARG
+				local vararg = frame.vararg;
 				local a = dpc.A;
 				local b = dpc.B;
 				if (b == 0) then
@@ -931,7 +935,13 @@ do
 			l.upvals[0] = e_up;
 		end
 
+		-- about @newframe
+		-- The frame is supposed to work as a light way of
+		-- passing closure data to the luaV_execute function, while
+		-- also keeping support for something such as debugging via line
+		-- number, as it keeps track of the lastpc
 		return function(...)
+			local newframe = {};
 			local pass, list = h_wrap(...);
 			local pl, al = {}, nil;
 			local nr, rets;
@@ -949,7 +959,11 @@ do
 				end
 			end
 
-			nr, rets = luaV_execute(l, pl, al); -- execute
+			newframe.lclosure = l;
+			newframe.stack = pl;
+			newframe.vararg = al;
+			newframe.lastpc = 0; -- used for debugging
+			nr, rets = luaV_execute(newframe); -- execute
 
 			if nr and (nr ~= 0) then -- finish return
 				return unpack(rets, 1, nr);
