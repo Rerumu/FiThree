@@ -274,12 +274,12 @@ do
 			end
 
 			local function readlong()
-				local a, b = h_tobit(readint()), h_tobit(readint());
+				local a, b = readint(), readint();
 
 				if specs.little then
-					return h_tobit(b * (2 ^ 32) + a);
+					return h_tobit(b) * (2 ^ 32) + a;
 				else
-					return h_tobit(a * (2 ^ 32) + b);
+					return h_tobit(a) * (2 ^ 32) + b;
 				end
 			end
 
@@ -902,7 +902,7 @@ do
 					end
 				end
 				p.cached = ncl;
-				setobj(dpc.A, luaF_wrap(ncl));
+				setobj(dpc.A, luaF_wrap(ncl, nil));
 			elseif (op == 45) then -- VARARG
 				local vararg = frame.vararg;
 				local a = dpc.A;
